@@ -31,11 +31,11 @@ class User
     WHERE
       id = ?
     SQL
-
+    return nil unless user.length > 0
     User.new(user.first)
   end
 
-  def self.find_by_name(name)
+  def self.find_by_name(fname, lname)
     user = QuestionsDatabase.instance.execute(<<-SQL, fname, lname)
 
     SELECT
@@ -47,13 +47,13 @@ class User
     AND
       lname = ?
   SQL
-    User.new(user)
+    User.new(user.first)
   end
 
   def initialize(info)
-    @id = info['id']
     @fname = info['fname']
     @lname = info['lname']
+    @id = info['id']
   end
 end
 
@@ -65,7 +65,7 @@ class Question
     data.map { |datum| User.new(datum) }
   end
 
-  def self.find_by_id
+  def self.find_by_id(id)
     question = QuestionsDatabase.instance.execute(<<-SQL, id)
     
     SELECT
